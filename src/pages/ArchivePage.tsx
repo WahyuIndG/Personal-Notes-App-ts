@@ -18,8 +18,9 @@ function ArchivePage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['archivedNotes'],
+    queryKey: ['notes', { archived: true }],
     queryFn: getArchivedNotes,
+    staleTime: 300000,
   });
 
   function onSearchHandler(newKeyword: string) {

@@ -64,6 +64,15 @@ function DetailPage() {
   const { mutate: onArchiveHandler } = useMutation({
     mutationFn: archiveNote,
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: false }],
+        refetchType: 'inactive',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: true }],
+        refetchType: 'inactive',
+      });
+
       queryClient.setQueryData(['activeNotes'], (oldActiveNotes: Note[] | undefined) => {
         if (isArrayOfNote(oldActiveNotes)) {
           const newActiveNotes = oldActiveNotes.filter((note) => note.id !== variables);
@@ -89,7 +98,16 @@ function DetailPage() {
   const { mutate: onUnarchiveHandler } = useMutation({
     mutationFn: unarchiveNote,
     onSuccess: (_, variables) => {
-      queryClient.setQueryData(['activeNotes'], (oldActiveNotes: Note[] | undefined) => {
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: false }],
+        refetchType: 'inactive',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: true }],
+        refetchType: 'inactive',
+      });
+
+      queryClient.setQueryData(['notes', { archived: false }], (oldActiveNotes: Note[] | undefined) => {
         if (oldActiveNotes !== undefined) {
           const cachedNote: Note | undefined = queryClient.getQueryData(['note', variables]);
 
@@ -100,7 +118,7 @@ function DetailPage() {
         return undefined;
       });
 
-      queryClient.setQueryData(['archivedNotes'], (oldActiveNotes: Note[] | undefined) => {
+      queryClient.setQueryData(['notes', { archived: true }], (oldActiveNotes: Note[] | undefined) => {
         if (oldActiveNotes !== undefined) {
           const newActiveNotes = oldActiveNotes.filter((note) => note.id !== variables);
 
@@ -115,13 +133,22 @@ function DetailPage() {
   const { mutate: onDeleteHandler } = useMutation({
     mutationFn: deleteNote,
     onSuccess: (_, variables) => {
-      queryClient.setQueryData(['activeNotes'], (oldActiveNotes: Note[] | undefined) => {
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: false }],
+        refetchType: 'inactive',
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['notes', { archived: true }],
+        refetchType: 'inactive',
+      });
+
+      queryClient.setQueryData(['notes', { archived: false }], (oldActiveNotes: Note[] | undefined) => {
         if (oldActiveNotes !== undefined) {
           return oldActiveNotes.filter((note) => note.id !== variables);
         }
         return undefined;
       });
-      queryClient.setQueryData(['archivedNotes'], (oldArchivedNotes: Note[] | undefined) => {
+      queryClient.setQueryData(['notes', { archived: true }], (oldArchivedNotes: Note[] | undefined) => {
         if (oldArchivedNotes !== undefined) {
           return oldArchivedNotes.filter((note) => note.id !== variables);
         }

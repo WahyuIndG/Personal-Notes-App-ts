@@ -18,8 +18,9 @@ function HomePage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['activeNotes'],
+    queryKey: ['notes', { archived: false }],
     queryFn: getActiveNotes,
+    staleTime: 300000,
   });
 
   function onSearchHandler(newKeyword: string) {

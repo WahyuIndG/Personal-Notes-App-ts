@@ -27,13 +27,17 @@ function AddPage() {
   const { isError, error, mutate } = useMutation({
     mutationFn: addNote,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['activeNotes'], exact: true });
-      queryClient.setQueryData(['activeNotes'], (oldActiveNotes: Note[]) => {
-        return [...oldActiveNotes, data];
+      queryClient.invalidateQueries({ queryKey: ['notes', { archived: false }], refetchType: 'inactive' });
+      queryClient.setQueryData(['notes', { archived: false }], (oldActiveNotes: Note[] | undefined) => {
+        if (oldActiveNotes !== undefined) {
+          return [...oldActiveNotes, data];
+        }
+        return undefined;
       });
       navigate('/');
     },
   });
+
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
 
