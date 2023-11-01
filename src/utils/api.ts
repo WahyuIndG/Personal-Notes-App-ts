@@ -34,11 +34,15 @@ async function login(credentials: { email: string; password: string }): Promise<
     });
 
     return response.data.data.accessToken;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
@@ -52,12 +56,15 @@ async function register(credentials: { name: string; email: string; password: st
       },
     });
   } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
-    throw error;
   }
 }
 
@@ -68,12 +75,17 @@ async function getUserLogged(): Promise<User> {
     });
 
     return response.data.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
+
     throw error;
   }
 }
@@ -106,12 +118,16 @@ async function getActiveNotes(): Promise<Note[]> {
     });
 
     return response.data.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+      } else {
+        console.error('Another error occurred: ', error);
+      }
+      throw error;
     }
+
     throw error;
   }
 }
@@ -124,11 +140,15 @@ async function getArchivedNotes(): Promise<Note[]> {
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
@@ -143,11 +163,15 @@ async function getNote(id: string): Promise<Note> {
     });
 
     return response.data.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
@@ -160,11 +184,15 @@ async function archiveNote(id: string) {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
@@ -177,11 +205,15 @@ async function unarchiveNote(id: string) {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
@@ -194,11 +226,15 @@ async function deleteNote(id: string) {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+        throw new Error(error.response?.data?.message);
+      } else {
+        console.error('Another error occurred: ', error);
+        throw error;
+      }
     }
     throw error;
   }
