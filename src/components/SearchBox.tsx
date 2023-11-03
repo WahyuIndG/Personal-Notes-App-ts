@@ -4,10 +4,10 @@ import LocaleContext from '../contexts/LocaleContext';
 
 interface SearchBoxProps {
   keyword: string;
-  onSearchHandler: (data: string) => void;
+  onSearch: (data: string) => void;
 }
 
-const SearchBox = ({ keyword, onSearchHandler }: SearchBoxProps) => {
+const SearchBox = ({ keyword, onSearch }: SearchBoxProps) => {
   const { locale } = useContext(LocaleContext);
 
   return (
@@ -17,7 +17,7 @@ const SearchBox = ({ keyword, onSearchHandler }: SearchBoxProps) => {
         type="text"
         placeholder={locale === 'en' ? 'Search here ...' : 'Cari disini ...'}
         value={keyword}
-        onChange={(e) => onSearchHandler(e.target.value)}
+        onChange={(e) => onSearch(e.target.value)}
       />
     </div>
   );

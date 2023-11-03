@@ -3,7 +3,7 @@ import { IconType } from 'react-icons';
 
 interface ButtonProps {
   Icon: IconType | null;
-  children?: React.ReactNode;
+  children?: React.ReactNode | null;
   onSubmitHandler: (...args: any[]) => void;
   title?: string;
 }

@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import Header from './components/Header';
-import LoadingScreen from './components/LoadingScreen';
 import Alert from './components/Alert';
 
 import DetailPage from './pages/DetailPage';
@@ -18,6 +17,7 @@ import ThemeContext from './contexts/ThemeContext';
 import LocaleContext from './contexts/LocaleContext';
 
 import { putAccessToken, getUserLogged } from './utils/api';
+import LoadingScreen from './components/LoadingScreen';
 
 function App() {
   const [locale, setLocale] = useState(localStorage.getItem('locale') || 'en');
@@ -40,10 +40,16 @@ function App() {
     };
   }, [theme]);
 
-  const { data, isLoading, refetch } = useQuery({
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ['auth'],
     queryFn: getUserLogged,
     retry: false,
+    refetchOnWindowFocus: false,
+    throwOnError: false,
   });
 
   useEffect(() => {
@@ -81,7 +87,7 @@ function App() {
     return <LoadingScreen />;
   }
 
-  if (!data) {
+  if (!user) {
     return (
       <>
         <ThemeContext.Provider value={themeContextValue}>
@@ -109,7 +115,6 @@ function App() {
             <Route path="/add" element={<AddPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          <Alert />
         </LocaleContext.Provider>
       </ThemeContext.Provider>
     </>

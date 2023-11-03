@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://notes-api.dicoding.dev/v1';
-
 interface Note {
   id: string;
   title: string;
@@ -16,6 +14,8 @@ interface User {
   name: string;
   email: string;
 }
+
+const BASE_URL = 'https://notes-api.dicoding.dev/v1';
 
 function getAccessToken(): string | null {
   return localStorage.getItem('accessToken');
@@ -55,7 +55,7 @@ async function register(credentials: { name: string; email: string; password: st
         'Content-Type': 'application/json',
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.data?.message) {
         console.error('HTTP error occured: ', error.response.status, error.response.data);
@@ -79,13 +79,10 @@ async function getUserLogged(): Promise<User> {
     if (axios.isAxiosError(error)) {
       if (error.response?.data?.message) {
         console.error('HTTP error occured: ', error.response.status, error.response.data);
-        throw new Error(error.response?.data?.message);
       } else {
         console.error('Another error occurred: ', error);
-        throw error;
       }
     }
-
     throw error;
   }
 }
@@ -99,11 +96,13 @@ async function addNote(data: { title: string; body: string }): Promise<Note> {
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    if (error.response?.data?.message) {
-      console.error('HTTP error occured: ', error.response.status, error.response.data);
-    } else {
-      console.error('Another error occurred: ', error);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.message) {
+        console.error('HTTP error occured: ', error.response.status, error.response.data);
+      } else {
+        console.error('Another error occurred: ', error);
+      }
     }
     throw error;
   }
@@ -125,7 +124,6 @@ async function getActiveNotes(): Promise<Note[]> {
       } else {
         console.error('Another error occurred: ', error);
       }
-      throw error;
     }
 
     throw error;
@@ -144,10 +142,8 @@ async function getArchivedNotes(): Promise<Note[]> {
     if (axios.isAxiosError(error)) {
       if (error.response?.data?.message) {
         console.error('HTTP error occured: ', error.response.status, error.response.data);
-        throw new Error(error.response?.data?.message);
       } else {
         console.error('Another error occurred: ', error);
-        throw error;
       }
     }
     throw error;
@@ -167,10 +163,8 @@ async function getNote(id: string): Promise<Note> {
     if (axios.isAxiosError(error)) {
       if (error.response?.data?.message) {
         console.error('HTTP error occured: ', error.response.status, error.response.data);
-        throw new Error(error.response?.data?.message);
       } else {
         console.error('Another error occurred: ', error);
-        throw error;
       }
     }
     throw error;
