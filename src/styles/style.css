@@ -267,6 +267,7 @@ main {
   top: -100px;
 }
 
+.item .item__text h1,
 .item .item__text h3 {
   overflow: hidden;
   width: 100%;

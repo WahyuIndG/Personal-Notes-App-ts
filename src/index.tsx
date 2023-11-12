@@ -1,36 +1,48 @@
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ErrorBoundary } from 'react-error-boundary';
 
 import App from './App';
 import './styles/style.css';
-import ErrorScreen from './components/ErrorScreen';
-import { Suspense } from 'react';
-import LoadingScreen from './components/LoadingScreen';
+import React, { Suspense } from 'react';
+import { LoadingScreen } from './components/organisms';
+import {
+  QueryClient,
+  QueryClientContext,
+  QueryClientProvider,
+  QueryErrorResetBoundary,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorPage } from './pages';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 
+type Props = {
+  error: Error;
+  resetErrorBoundary: () => void;
+};
+
+const FallbackRender = ({ error, resetErrorBoundary }: Props) => {
+  return <ErrorPage error={error} resetErrorBoundary={resetErrorBoundary} />;
+};
+
 const root = createRoot(document.getElementById('root') as Element);
 root.render(
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            onReset={reset}
-            fallbackRender={({ error, resetErrorBoundary }) => {
-              return <ErrorScreen error={error} resetErrorBoundary={resetErrorBoundary} />;
-            }}
-          >
-            <Suspense fallback={<LoadingScreen />}>
-              <App />
-            </Suspense>
-          </ErrorBoundary>
-        )}
-      </QueryErrorResetBoundary>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
-  </BrowserRouter>
+  <QueryClientProvider client={queryClient}>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary onReset={reset} fallbackRender={FallbackRender}>
+          <Suspense fallback={<LoadingScreen />}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/*" element={<App />} />
+              </Routes>
+            </BrowserRouter>
+          </Suspense>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
+    <ReactQueryDevtools />
+  </QueryClientProvider>
 );

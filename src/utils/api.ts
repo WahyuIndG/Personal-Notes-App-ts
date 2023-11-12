@@ -48,7 +48,11 @@ async function login(credentials: { email: string; password: string }): Promise<
   }
 }
 
-async function register(credentials: { name: string; email: string; password: string }): Promise<void> {
+async function register(credentials: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<void> {
   try {
     await axios.post(`${BASE_URL}/register`, JSON.stringify(credentials), {
       headers: {
@@ -130,7 +134,14 @@ async function getActiveNotes(): Promise<Note[]> {
   }
 }
 
+// let count = 0;
+
 async function getArchivedNotes(): Promise<Note[]> {
+  // if (count < 3) {
+  //   count++;
+  //   throw new Error(`fake error, count is equal to : ${count}`);
+  // }
+
   try {
     const response = await axios.get(`${BASE_URL}/notes/archived`, {
       headers: {

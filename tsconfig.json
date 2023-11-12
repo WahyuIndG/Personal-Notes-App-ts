@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "srcAtomicDesign/pages/Others/ErrorPage.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

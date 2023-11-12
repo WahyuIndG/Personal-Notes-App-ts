@@ -1,49 +1,34 @@
-import { useMemo, useState, useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import Header from './components/Header';
-import Alert from './components/Alert';
-
-import DetailPage from './pages/DetailPage';
-import AddPage from './pages/AddPage';
-import ArchivePage from './pages/ArchivePage';
-import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
-
-import ThemeContext from './contexts/ThemeContext';
+import {
+  ActiveNotesPage,
+  ArchivedNotesPage,
+  CreateNotePage,
+  DetailNotePage,
+  LoginPage,
+  NotFoundPage,
+  RegisterPage,
+} from './pages';
+import Layout from './pages/Others/Layout';
+import RequireAuth from './pages/Others/RequireAuth';
+import useLocale from './hooks/useLocale';
+import useTheme from './hooks/useTheme';
 import LocaleContext from './contexts/LocaleContext';
+import ThemeContext from './contexts/ThemeContext';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getUserLogged, putAccessToken } from './utils/api';
+import { LoadingScreen } from './components/organisms';
+import AuthUserContext from './contexts/AuthUserContext';
 
-import { putAccessToken, getUserLogged } from './utils/api';
-import LoadingScreen from './components/LoadingScreen';
-
-function App() {
-  const [locale, setLocale] = useState(localStorage.getItem('locale') || 'en');
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  const navigate = useNavigate();
+const App = () => {
+  const localeContextValue = useLocale();
+  const themeContextValue = useTheme();
   const queryClient = useQueryClient();
-
-  const localContextValue = useMemo(() => {
-    return {
-      locale,
-      toggleLocale,
-    };
-  }, [locale]);
-
-  const themeContextValue = useMemo(() => {
-    return {
-      theme,
-      toggleTheme,
-    };
-  }, [theme]);
+  const navigate = useNavigate();
 
   const {
-    data: user,
+    data: authUser,
+    isFetching,
     refetch,
-    isLoading,
   } = useQuery({
     queryKey: ['auth'],
     queryFn: getUserLogged,
@@ -52,73 +37,41 @@ function App() {
     throwOnError: false,
   });
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  function toggleLocale() {
-    setLocale((prevLocale) => {
-      const newLocale = prevLocale === 'en' ? 'id' : 'en';
-      localStorage.setItem('locale', newLocale);
-      return newLocale;
-    });
-  }
-
-  function toggleTheme() {
-    setTheme((prevTheme) => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-      localStorage.setItem('theme', newTheme);
-      return newTheme;
-    });
-  }
-
-  function loginSuccessHandler(accessToken: string) {
-    putAccessToken(accessToken);
+  function handleLoginSuccess(token: string) {
+    putAccessToken(token);
     refetch();
+    navigate('/');
   }
 
-  function logout() {
+  function handleLogout() {
     putAccessToken('');
     queryClient.removeQueries();
     navigate('/');
   }
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
-  if (!user) {
-    return (
-      <>
-        <ThemeContext.Provider value={themeContextValue}>
-          <LocaleContext.Provider value={localContextValue}>
-            <Routes>
-              <Route path="/*" element={<LoginPage loginSuccessHandler={loginSuccessHandler} />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Routes>
-            <Alert />
-          </LocaleContext.Provider>
-        </ThemeContext.Provider>
-      </>
-    );
-  }
+  if (isFetching) return <LoadingScreen />;
 
   return (
-    <>
+    <LocaleContext.Provider value={localeContextValue}>
       <ThemeContext.Provider value={themeContextValue}>
-        <LocaleContext.Provider value={localContextValue}>
-          <Header onLogout={logout} />
+        <AuthUserContext.Provider value={authUser}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/archive" element={<ArchivePage />} />
-            <Route path="/detail-page/:id" element={<DetailPage />} />
-            <Route path="/add" element={<AddPage />} />
+            <Route path="/" element={<Layout />}>
+              <Route path="login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route element={<RequireAuth onLogout={handleLogout} />}>
+                <Route index element={<ActiveNotesPage />} />
+                <Route path="archive" element={<ArchivedNotesPage />} />
+                <Route path="add" element={<CreateNotePage />} />
+                <Route path="notes/:id" element={<DetailNotePage />} />
+              </Route>
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </LocaleContext.Provider>
+        </AuthUserContext.Provider>
       </ThemeContext.Provider>
-    </>
+    </LocaleContext.Provider>
   );
-}
+};
 
 export default App;
