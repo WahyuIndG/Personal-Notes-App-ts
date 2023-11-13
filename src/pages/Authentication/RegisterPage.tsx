@@ -1,14 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../../utils/api';
 import React from 'react';
 import RegistrationBox from '../../components/organisms/RegistrationBox';
 import AuthenticationTemplate from '../../components/templates/AuthenticationTemplate';
+import { registerApp } from '../../services/notes';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { mutate, isError, error } = useMutation({
-    mutationFn: register,
+    mutationKey: registerApp().mutattionKey,
+    mutationFn: registerApp().mutationFn,
     onSuccess: () => {
       navigate('/');
     },

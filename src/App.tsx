@@ -15,9 +15,10 @@ import useTheme from './hooks/useTheme';
 import LocaleContext from './contexts/LocaleContext';
 import ThemeContext from './contexts/ThemeContext';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getUserLogged, putAccessToken } from './utils/api';
+import { putAccessToken } from './utils/api';
 import { LoadingScreen } from './components/organisms';
 import AuthUserContext from './contexts/AuthUserContext';
+import { getAuthUser } from './services/notes';
 
 const App = () => {
   const localeContextValue = useLocale();
@@ -30,8 +31,8 @@ const App = () => {
     isFetching,
     refetch,
   } = useQuery({
-    queryKey: ['auth'],
-    queryFn: getUserLogged,
+    queryKey: getAuthUser().queryKey,
+    queryFn: getAuthUser().queryFn,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError: false,

@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { login } from '../../utils/api';
 import React from 'react';
 import AuthenticationTemplate from '../../components/templates/AuthenticationTemplate';
 import LoginBox from '../../components/organisms/LoginBox';
+import { loginApp } from '../../services/notes';
 
 type Props = {
   onLoginSuccess: (token: string) => void;
@@ -10,7 +10,8 @@ type Props = {
 
 const LoginPage = ({ onLoginSuccess }: Props) => {
   const { mutate, isError, error } = useMutation({
-    mutationFn: login,
+    mutationKey: loginApp().mutationKey,
+    mutationFn: loginApp().mutationFn,
     onSuccess(token) {
       onLoginSuccess(token);
     },

@@ -4,6 +4,7 @@ import CreateNoteForm from '../../components/organisms/CreateNoteForm';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { addNote } from '../../utils/api';
+import { createNote } from '../../services/notes';
 
 type NewNote = {
   title: string;
@@ -24,7 +25,8 @@ const CreateNotePage = () => {
   };
 
   const { isError, error, mutate } = useMutation({
-    mutationFn: addNote,
+    mutationKey: createNote().mutationKey,
+    mutationFn: createNote().mutataionFn,
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['notes', { archived: false }],

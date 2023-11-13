@@ -1,11 +1,11 @@
-import { getActiveNotes } from '../../utils/api';
 import { NotesPageTemplate } from '../../components/templates';
 import { useSuspenseQuery } from '@tanstack/react-query';
+import { getActiveNotes } from '../../services/notes';
 
 const AktifNotesPage = () => {
   const { data: notes = [] } = useSuspenseQuery({
-    queryKey: ['notes', { archived: false }],
-    queryFn: getActiveNotes,
+    queryKey: getActiveNotes().queryKey,
+    queryFn: getActiveNotes().queryFn,
     staleTime: 300000,
     retry: false,
     refetchOnWindowFocus: false,

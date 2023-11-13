@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { RxArchive } from 'react-icons/rx';
 import { FiTrash2 } from 'react-icons/fi';
-import { getNote, archiveNote, deleteNote, unarchiveNote } from '../../utils/api';
+import { getNote, archiveNote, deleteNote, unarchiveNote } from '../../services/notes';
 import { getRandomColor, getLetter } from '../../utils/helper';
 import { useMutation, useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import { ButtonIcon } from '../../components/atoms';
@@ -13,8 +13,8 @@ const DetailNotePage = () => {
   const { id = '' } = useParams();
 
   const { data: note } = useSuspenseQuery({
-    queryKey: ['note', id],
-    queryFn: () => getNote(id),
+    queryKey: getNote(id).queryKey,
+    queryFn: getNote(id).queryFn,
   });
 
   type Note = {
@@ -27,7 +27,8 @@ const DetailNotePage = () => {
   };
 
   const { mutate: mutateArchive } = useMutation({
-    mutationFn: archiveNote,
+    mutationKey: archiveNote(id).mutationKey,
+    mutationFn: archiveNote(id).mutataionFn,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['notes', { archived: false }],
@@ -66,7 +67,8 @@ const DetailNotePage = () => {
   });
 
   const { mutate: mutateUnarchive } = useMutation({
-    mutationFn: unarchiveNote,
+    mutationKey: unarchiveNote(id).mutationKey,
+    mutationFn: unarchiveNote(id).mutataionFn,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['notes', { archived: false }],
@@ -107,7 +109,8 @@ const DetailNotePage = () => {
   });
 
   const { mutate: mutateDelete } = useMutation({
-    mutationFn: deleteNote,
+    mutationKey: deleteNote(id).mutationKey,
+    mutationFn: deleteNote(id).mutataionFn,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['notes', { archived: false }],
