@@ -7,9 +7,9 @@ import {
   LoginPage,
   NotFoundPage,
   RegisterPage,
+  Frame,
+  RequireAuth,
 } from './pages';
-import Layout from './pages/Others/Layout';
-import RequireAuth from './pages/Others/RequireAuth';
 import useLocale from './hooks/useLocale';
 import useTheme from './hooks/useTheme';
 import LocaleContext from './contexts/LocaleContext';
@@ -57,7 +57,7 @@ const App = () => {
       <ThemeContext.Provider value={themeContextValue}>
         <AuthUserContext.Provider value={authUser}>
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Frame />}>
               <Route path="login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
               <Route path="register" element={<RegisterPage />} />
               <Route element={<RequireAuth onLogout={handleLogout} />}>

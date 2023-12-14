@@ -23,7 +23,3 @@ const useLocale = () => {
 };
 
 export default useLocale;
-
-// useEffect(() => {
-//   document.documentElement.setAttribute('data-theme', theme);
-// }, [theme]);

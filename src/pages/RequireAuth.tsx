@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { NavBar } from '../../components/organisms';
-import AuthUserContext from '../../contexts/AuthUserContext';
+import { NavBar } from '../components/organisms';
+import AuthUserContext from '../contexts/AuthUserContext';
 import { useContext } from 'react';
 
 type Props = {

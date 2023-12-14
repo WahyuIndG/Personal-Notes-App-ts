@@ -7,7 +7,7 @@ export default function ArchivedNotesPage() {
     queryKey: getArchivedNotes().queryKey,
     queryFn: getArchivedNotes().queryFn,
     staleTime: 300000,
-    retry: false,
+    retry: 0,
     refetchOnWindowFocus: false,
   });
 

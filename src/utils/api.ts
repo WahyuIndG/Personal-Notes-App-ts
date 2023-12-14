@@ -134,20 +134,25 @@ async function getActiveNotes(): Promise<Note[]> {
   }
 }
 
-// let count = 0;
+let count = 1;
 
 async function getArchivedNotes(): Promise<Note[]> {
-  // if (count < 3) {
-  //   count++;
-  //   throw new Error(`fake error, count is equal to : ${count}`);
-  // }
-
   try {
     const response = await axios.get(`${BASE_URL}/notes/archived`, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
+
+    // console.log(count);
+
+    // if (count === 3) {
+    //   console.log('got you');
+    //   count++;
+    //   throw new Error('testing');
+    // }
+    // count++;
+
     return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

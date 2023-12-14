@@ -6,3 +6,5 @@ export { default as CreateNotePage } from './Notes/CreateNotePage';
 export { default as DetailNotePage } from './Notes/DetailNotePage';
 export { default as ErrorPage } from './Others/ErrorPage';
 export { default as NotFoundPage } from './Others/NotFoundPage';
+export { default as Frame } from './Frame';
+export { default as RequireAuth } from './RequireAuth';

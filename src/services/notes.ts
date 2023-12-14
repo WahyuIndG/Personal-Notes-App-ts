@@ -1,18 +1,3 @@
-/**
- * POST register
- * POST login
- * GET getuserlogged
- *
- * GET getnote
- * GET getArchiveNotes
- * GET getActiveNotes
- *
- * DELETE createenote
- * POST archiveNote
- * POST unArchiveNote
- * POST deleteNote
- */
-
 import * as API from '../utils/api';
 
 export const loginApp = () => ({

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
-const Layout = () => {
+const Frame = () => {
   return <Outlet />;
 };
 
-export default Layout;
+export default Frame;
